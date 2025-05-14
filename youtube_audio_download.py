@@ -1,15 +1,8 @@
 import pandas as pd
 from youtube_search import YoutubeSearch
+from utils.sanitize import sanitize_file_name
 import yt_dlp
-import re
 
-def sanitize_file_name(file_name):
-  file_name = re.sub(r'[\/:*?"<>|]', '_', file_name)
-  file_name = re.sub(r'\s+', '_', file_name)
-  file_name = re.sub(r'_+', '_', file_name)
-  file_name = file_name.strip()
-  return file_name
-  
 def is_relevant_video_title(video_title, song_title, song_artist):
   video_title = video_title.lower()
   song_title = song_title.lower()
