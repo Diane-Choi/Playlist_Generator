@@ -67,12 +67,12 @@ def download_music_from_youtube(csv_file):
     audios.append(audio_file_path)
   
   df['Audio'] = audios
-  df = df.fillna('None')
+  df = df.fillna('Not Found')
   print(df)
   
   df.to_csv(csv_file, index=False, encoding='UTF-8', sep=';')
     
 
 if __name__ == '__main__':
-  csv_file = '/Users/dianna/Desktop/CST/After/Playlist_Generator/playlist_csv/80s_hiphop.csv'
+  csv_file = 'playlist_csv/2010_kpop.csv'
   download_music_from_youtube(csv_file)
