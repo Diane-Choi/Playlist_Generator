@@ -55,8 +55,10 @@ def download_song(title, artist):
 def download_music_from_youtube(csv_file):
   # Read csv file
   df = pd.read_csv(csv_file, delimiter=';', encoding='UTF-8')
+  # df.columns = df.columns.str.strip().str.replace(r'\s+', '', regex=True)
   
   audios = []
+  response_str = '\nThe audio file has been downloaded: '
   
   # search Youtube and download the audio file
   for index, row in df.iterrows():
@@ -65,14 +67,17 @@ def download_music_from_youtube(csv_file):
     
     audio_file_path = download_song(title, artist)
     audios.append(audio_file_path)
+    response_str += f'\n{title} by {artist} : {audio_file_path}'
   
   df['Audio'] = audios
   df = df.fillna('Not Found')
   print(df)
   
   df.to_csv(csv_file, index=False, encoding='UTF-8', sep=';')
+  print(response_str)
+  return response_str
     
 
 if __name__ == '__main__':
-  csv_file = 'playlist_csv/2010_kpop.csv'
+  csv_file = 'playlist_csv/tvxq.csv'
   download_music_from_youtube(csv_file)
