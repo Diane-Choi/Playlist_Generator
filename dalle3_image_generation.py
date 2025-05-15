@@ -1,5 +1,6 @@
 import base64
 import os
+import openai
 from openai import OpenAI
 from dotenv import load_dotenv
 from utils.sanitize import sanitize_file_name
@@ -34,16 +35,33 @@ def text_to_image_prompt_generator(song_title, artist):
 
 def generate_dalle_image(song_title, artist, size="512x512"):
   prompt = f'Create a Photo. {text_to_image_prompt_generator(song_title, artist)}'
-  print("PROMPT: ", prompt)
+  print(f"Prompt for {song_title} by {artist}: {prompt}")
   
-  img = client.images.generate(
-      model="dall-e-2",
-      prompt=prompt,
-      n=1,
-      size=size,
-      response_format='b64_json'
-  )
-
+  try:
+    img = client.images.generate(
+        model="dall-e-2",
+        prompt=prompt,
+        n=1,
+        size=size,
+        response_format='b64_json'
+    )
+    
+  except openai.error.RateLimitError as e:
+    print(f"Rate limit error: {e}")
+    return None
+  except openai.error.APIError as e:
+    print(f"OpenAI API error: {e}")
+    return None
+  except openai.error.APIConnectionError as e:
+    print(f"Connection error: {e}")
+    return None
+  except openai.error.InvalidRequestError as e:
+    print(f"Invalid request: {e}")
+    return None
+  except Exception as e:
+    print(f"Unexpected error during image generation: {e}")
+    return None
+    
   image_bytes = base64.b64decode(img.data[0].b64_json)
   
   image_file_name = sanitize_file_name(f'{song_title}_{artist}')
