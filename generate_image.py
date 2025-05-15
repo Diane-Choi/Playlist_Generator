@@ -4,7 +4,6 @@ from dalle3_image_generation import generate_dalle_image
 
 def generate_images_for_songs(csv_file):
   df_playlist = pd.read_csv(csv_file, sep=';')
-  print(df_playlist)
   
   image_file_path = list()
   response_str = 'Generated images for the upcoming song. '
@@ -20,7 +19,7 @@ def generate_images_for_songs(csv_file):
       response_str += f"\n{row['Title']} by {row['Artist']}: Successfully generated the image {image_file}"
     time.sleep(1)
   
-  df_playlist['image_file'] = image_file_path
+  df_playlist['Image'] = image_file_path
   df_playlist.to_csv(csv_file, sep=';', index=False, lineterminator='\n')
   return response_str
 
