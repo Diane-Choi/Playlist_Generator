@@ -13,6 +13,7 @@ def generate_images_for_songs(csv_file):
     if row['Audio'] == 'Not Found':
       image_file_path.append(None)
       response_str += f"\n{row['Title']} by {row['Artist']}: Cannot find the audio, Failed to generate Image"
+      print(f"Failed to find the audio file for '{row['Title']}'...")
     else:
       image_file = generate_dalle_image(row['Title'], row['Artist'])
       image_file_path.append(image_file)
