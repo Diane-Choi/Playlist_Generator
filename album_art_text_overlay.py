@@ -44,6 +44,9 @@ def create_album_art(image_path, title, artist, output_path='__info'):
         title (str): Song title to overlay.
         artist (str): Artist name to overlay.
         output_path (str): Str to append to the saved image file name.
+        
+    Returns:
+        str: Output path.
     """
     album_art = Image.open(image_path)
     width, height = album_art.size
@@ -86,6 +89,8 @@ def create_album_art(image_path, title, artist, output_path='__info'):
     output_path = add_info_to_file_path(image_path, '__info')
 
     album_art.save(output_path)
+    
+    return output_path
 
 
 # if __name__ == '__main__':
