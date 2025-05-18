@@ -55,6 +55,16 @@ def create_videos_from_csv_playlist(csv_file):
   return videos
   
 def combine_videos(video_paths, output_path):
+  """
+  Combines multiple video clips into a single video.
+  
+  Args:
+    video_paths (list[str]): A list of file paths to the each video clips.
+    output_path (str): The output file path for the combined video.
+    
+  Returns:
+    str: The path to the final combined video file.
+  """
   clips = [VideoFileClip(video_path) for video_path in video_paths]
   
   combined_video = concatenate_videoclips(clips)
@@ -62,13 +72,25 @@ def combine_videos(video_paths, output_path):
   
   return output_path
   
-
-
-if __name__ == '__main__':
-  audio_path = '/Users/dianna/Desktop/CST/After/Playlist_Generator/audios/I_Am_the_Best-2NE1.mp3'
-  image_path = '/Users/dianna/Desktop/CST/After/Playlist_Generator/images/I_Am_the_Best_2NE1__info.png'
-  # result = create_video(audio_path, image_path)
-  videos = create_videos_from_csv_playlist('/Users/dianna/Desktop/CST/After/Playlist_Generator/playlist_csv/2010_kpop.csv')
-  output_video_path = 'com_vid.mp4'
+def generate_video_using_images(csv_file):
+  """
+  Generates individual videos from a csv file and combines them into one final video.
+  The csv file should contain the following columns:
+    
+  Args:
+    csv_file (str): The path to the playlist csv file that contains the following columns:
+      - 'Audio': The file path of the audio file (e.g. mp3)
+      - 'Info_Image': The file path of the image that represents the song info.
+    
+  Returns: 
+    str: A message indicating that the final video has been created with the output path. 
+  """
+  videos = create_videos_from_csv_playlist(csv_file)
+  
+  dir, csv_file_full_name = os.path.split(csv_file)
+  file_name, ext = os.path.splitext(csv_file_full_name)
+  
+  output_video_path = f'./videos/{file_name}.mp4'
   combine_videos(videos, output_video_path)
-  print("Video combined: ",output_video_path)
+
+  return f"The video for the playlist is successfully created. A file path is as follow: \n {output_video_path}" 
