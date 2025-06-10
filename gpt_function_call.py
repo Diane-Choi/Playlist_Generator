@@ -8,6 +8,7 @@ import pandas as pd
 import tkinter.filedialog as filedialog
 from youtube_audio_download import download_music_from_youtube
 from generate_image import generate_images_for_songs
+from generate_video import generate_video_using_images
 
 load_dotenv()
 client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
@@ -50,6 +51,7 @@ def ask_to_gpt_35_turbo(messages, functions, model='gpt-3.5-turbo', temperature=
             "save_playlist_as_csv": save_playlist_as_csv,
             "download_music_from_youtube": download_music_from_youtube,
             "generate_images_for_songs": generate_images_for_songs,
+            "generate_video_using_images": generate_video_using_images,
         }
         function_name = response_message.function_call.name
         function_to_call = available_functions[function_name]
@@ -163,6 +165,8 @@ def main():
          - At first, suggest songs to make a playlist based on users' request. The playlist must contain the title, artist, and release year of each song in a list format. You must ask the user if they want to save the playlist as follow: "Would you like to save this playlist as a CSV file?".
          - After saving the playlist as a CSV file, you must ask the users if they would like to download the MP3 files of the songs in the playlist.
          - After downloading the mp3 files for songs in the playlist, you must ask the users if they would like to generate album cover images for the each song.
+         - After downloading the mp3 files in the playlist, you can generate a playlisst video using created album cover images. You should ask the users if they want to create the video.
+         - After generating the video, you can say goodbye to the users or if they want another recommendation.
          """}, 
     ]
     
@@ -198,6 +202,20 @@ def main():
         {
             "name": "generate_images_for_songs",
             "description": "Generate images for the songs in the recent CSV file. This function can be used only after downloading audio files.",
+            "parameters": {
+                "type": "object",
+                "properties": {
+                    "csv_file": {
+                        "type": "string",
+                        "description": "A file path of the recent CSV file.",
+                    },
+                },
+                "required": ["csv_file"],
+            },
+        },
+        {
+            "name": "generate_video_using_images",
+            "description": "Generate a playlist video using the created images. This function can be used only after images are created.",
             "parameters": {
                 "type": "object",
                 "properties": {
